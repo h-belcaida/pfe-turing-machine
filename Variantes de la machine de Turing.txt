@@ -1,0 +1,8 @@
+Variantes des machines de Turing
+
+
+Il existe de nombreuses variantes des machines de Turing. Il existe en fait presqu'autant de variantes qu'il y a de livres traitant du sujet. Parmi ces variantes, certaines sont classiques comme les machines à bandes biinfinies ou les machines à plusieurs bandes. D'autres sont plus marginales.
+
+Le point essentiel est que toutes ces variantes sont équivalentes. Ceci signifie que tout ce qui peut être fait par un type de machines peut aussi être fait par un autre de type de machines. Nous verrons que c'est en particulier vrai pour les variantes classiques.
+
+Nous mentionnons quelques variantes mineures. Dans la définition que nous avons donnée, la tête de lecture se déplace déplace d'une position à gauche ou d'une position à droite à chaque transition de la machine. Il est possible de considérer des machines où la tête de lecture a une troisième alternative. Elle peut aussi rester sur la même position de la bande. Cette possibilité n'est pas très utile pour les machine à une bande mais rend souvent plus simple la description des machines dans le cas des machines à plusieurs bandes. Dans le cas d'une machine à une bande, l'ensemble E de transitions contient des transitions de la forme (p, a, q, b, x) où x appartient à {L, R, S} (au lieu de {L, R} dans la définition). Un symbole L (Left) signifie que la tête de lecture se déplace d'une position vers la gauche, un symbole R (Right) signifie que la tête de lecture se déplace d'une position vers la droite et un symbole S (Stay) signifie que la tête de lecture reste sur la même position.
