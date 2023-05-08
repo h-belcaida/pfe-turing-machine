@@ -1,11 +1,16 @@
+import customtkinter
+
 try:  # python 3: default
     import tkinter as tk
+    import customtkinter as ctk
     from tkinter import filedialog
 except ImportError:  # python 2
     import Tkinter as tk
+    import customtkinter as ctk
     import tkFileDialog as filedialog
 
 import os, graphviz
+ctk.set_appearance_mode("dark")
 
 WIDTH = 250
 HEIGHT = 75
@@ -22,9 +27,8 @@ class GrapherGUI():
         self.main.geometry(DIMENSIONS)
 
         ### RIGHT FRAME: EDITOR
-        self.buttonGraph = tk.Button(self.main, width=10, text="Graph", command=self.graphTM)
+        self.buttonGraph = ctk.CTkButton(self.main, width=10, text="Graph", command=self.graphTM)
         self.buttonGraph.pack(pady=5, expand=1)
-
     def graphTM(self):
         """Get a TM specification file from the user, and graph it"""
         tmFileName = filedialog.askopenfilename(
@@ -93,9 +97,9 @@ class GrapherGUI():
         return d
 
 
-root = tk.Tk()
+root = ctk.CTk()
 try:  # do a fancy icon if available
-    img = tk.Image("photo", file="favicon.gif")
+    img = tk.Image("photo", file="tm.png")
     root.call('wm', 'iconphoto', root._w, img)
 except Exception:
     pass
