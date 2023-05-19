@@ -36,7 +36,7 @@ class TMGUI:
         self.frameEditor = customtkinter.CTkFrame(self.main)
         self.labelEditor = customtkinter.CTkLabel(self.frameEditor, text="Editor")
         self.labelEditor.grid(row=0, column=1)
-        self.textEditor = ctk.CTkTextbox(self.frameEditor, height=400, width=40, wrap=ctk.WORD)
+        self.textEditor = ctk.CTkTextbox(self.frameEditor, height=590, width=40, wrap=ctk.WORD)
         #self.textEditor = scrolledtext.ScrolledText(self.frameEditor, height=35, width=40, wrap=tk.WORD)
         self.textEditor.grid(row=1, column=0, columnspan=3, pady=7, padx=7, sticky='news')
 
@@ -58,34 +58,60 @@ class TMGUI:
         self.buttonLoad = ctk.CTkButton(self.frameEditor, width=10, text="             Load             ", command=self.loadTM)
         self.buttonLoad.grid(row=2, column=0, padx=20, pady=5)
 
-        self.frameEditor.grid(row=0, column=3, padx=15, pady=10, sticky='news')
+        self.frameEditor.grid(row=3, column=3, padx=15, pady=10, sticky='news')
 
         default_resize(self.frameEditor)
 
         ### LEFT FRAME: Simulator
         self.frameSim = customtkinter.CTkFrame(self.main)
         self.labelSim = customtkinter.CTkLabel(self.frameSim, text="Turing machine Simulator")
-        self.labelSim.grid(row=0, column=0, columnspan=3, pady=7, padx=7)
+        #self.labelSim.grid(row=0, column=0, columnspan=3, pady=7, padx=7)
+        self.labelSim.place(x=300, y=18)
 
         self.frameInput = customtkinter.CTkFrame(self.frameSim)
         customtkinter.CTkLabel(self.frameInput, text="Tape Input: ", pady=7, padx=7).pack(side='left')
         self.tape_input = tk.StringVar()
         self.tape_input.trace("w", self.setTape)
-        self.textTapeInput = customtkinter.CTkEntry(self.frameInput, textvariable=self.tape_input, width=200)
+        self.textTapeInput = customtkinter.CTkEntry(self.frameInput, textvariable=self.tape_input, width=225)
         self.textTapeInput.pack(side='right', pady=10, padx=10)
-        self.frameInput.grid(row=1, column=0, columnspan=3, pady=7, padx=7)
+        #self.frameInput.grid(row=1, column=0, columnspan=3, pady=7, padx=7)
+        self.frameInput.place(x=20,y=50)
 
-        self.tabsSim = ttk.Notebook(self.frameSim)
+        combobox_var = customtkinter.StringVar(value="Choisir une algorithme")  # set initial value
+
+        def combobox_callback(choice):
+            print("combobox dropdown clicked:", choice)
+
+        self.combobox = customtkinter.CTkComboBox(self.main,
+                                             values=["Addition de deux nombre binaire                                           ",
+                                                     "Addition de deux nombre binaire                                           ",
+                                                     "Addition de deux nombre binaire                                           "],
+                                             command=combobox_callback, width=400,height=40,
+                                             variable=combobox_var)
+        #self.combobox.pack(padx=20, pady=10)
+        self.combobox.place(x=424,y=63)
+
+
+        self.frameStep = customtkinter.CTkFrame(self.frameSim)
+        self.buttonStep = ctk.CTkButton(self.frameStep, width=10, text="     Step     ", command=self.stepTM)
+        self.buttonStep.grid(row=0, column=0, pady=7, padx=7)
+        self.buttonStepBack = ctk.CTkButton(self.frameStep, width=10, text="Step Back", command=self.stepBackTM)
+        self.buttonStepBack.grid(row=0, column=2, pady=5, padx=7)
+        #self.frameStep.grid(row=2, column=2, pady=7, padx=7)
+        self.frameStep.place(x=640, y=110)
+
+        self.tabsSim = ttk.Notebook(self.frameSim, width=800, height=430)
         #self.tabsSim = ctk.CTkTabview(self.frameSim)
         self.frameTape = customtkinter.CTkFrame(self.tabsSim)
         self.frameText = customtkinter.CTkFrame(self.tabsSim)
         self.tabsSim.add(self.frameTape, text='  Tape  ')
         self.tabsSim.add(self.frameText, text='  Text  ')
-        self.tabsSim.grid(row=2, column=0, columnspan=3, pady=10, padx=10)
+        self.tabsSim.grid(row=3, column=0, columnspan=3, pady=7, padx=7)
 
         # Check boxes
+        #####################################################################################################
         self.frameCheck = customtkinter.CTkFrame(self.frameSim)
-        #self.bidirectional = tk.BooleanVar()
+        self.bidirectional = tk.BooleanVar()
         self.bidirectional = ctk.BooleanVar()
         #self.checkbox2Way = tk.Checkbutton(
             #self.frameCheck, text="Bidirectional", var=self.bidirectional, onvalue=True, offvalue=False)
@@ -96,22 +122,24 @@ class TMGUI:
         self.two_tape = tk.BooleanVar()
         #self.checkbox2Tape = ctk.CTkCheckBox(self.frameCheck, text="Two Tape", var=self.two_tape, onvalue=True, offvalue=False)
 
-        self.checkbox2Tape = ctk.CTkCheckBox(self.frameCheck, text="Two Tape", onvalue=True, offvalue=False)
+        #self.checkbox2Tape = ctk.CTkCheckBox(self.frameCheck, text="Two Tape", onvalue=True, offvalue=False)
 
-        self.checkbox2Tape.grid(row=1, sticky='w', pady=7, padx=7)
-        self.two_tape.trace("w", self.setTwoTape)
-        self.bidirectional.trace("w", self.setBidirectional)
-        self.frameCheck.grid(row=3, column=2)
+        #self.checkbox2Tape.grid(row=1, sticky='w', pady=7, padx=7)
+        #self.two_tape.trace("w", self.setTwoTape)
+        #self.bidirectional.trace("w", self.setBidirectional)
+        #self.frameCheck.grid(row=3, column=2)
+        self.frameCheck.place(x=408,y=110)
+        #####################################################################################################
 
         # Controls
         self.frameRun = customtkinter.CTkFrame(self.frameSim)
         #self.buttonRun = tk.Button(self.frameRun, width=10, relief='groove', text="Run", command=self.runTM)
-        self.buttonRun = ctk.CTkButton(self.frameRun, width=10, text="             Run             ", command=self.runTM)
+        self.buttonRun = ctk.CTkButton(self.frameRun, width=100, text="                  Run                  ", command=self.runTM)
         self.buttonRun.grid(row=0, column=0, pady=7, padx=7)
 
-        self.buttonStop = ctk.CTkButton(self.frameRun, width=10, text="      Stop      ", command=self.stopTM)
+        self.buttonStop = ctk.CTkButton(self.frameRun, width=100, text="                  Stop                  ", command=self.stopTM)
         self.buttonStop.grid(row=0, column=1, pady=7, padx=7)
-        self.buttonReset = ctk.CTkButton(self.frameRun, width=10, text="      Reset      ", command=self.resetTM)
+        self.buttonReset = ctk.CTkButton(self.frameRun, width=100, text="                  Reset                  ", command=self.resetTM)
         self.buttonReset.grid(row=1, column=1, pady=7, padx=7)
         self.frameDelay = ctk.CTkFrame(self.frameRun)
         ctk.CTkLabel(self.frameDelay, text="Delay (s)").pack(side='left', padx=5)
@@ -119,15 +147,11 @@ class TMGUI:
         self.textDelay.insert(0, "0.1")
         self.textDelay.pack(side='right')
         self.frameDelay.grid(row=1, column=0, pady=7, padx=7)
-        self.frameRun.grid(row=3, column=0)
+        #self.frameRun.grid(row=2, column=0)
+        self.frameRun.place(x=20, y=110)
 
-        self.frameStep = customtkinter.CTkFrame(self.frameSim)
-        self.buttonStep = ctk.CTkButton(self.frameStep, width=10, text="     Step     ", command=self.stepTM)
-        self.buttonStep.grid(row=0, pady=7, padx=7)
-        self.buttonStepBack = ctk.CTkButton(
-            self.frameStep, width=10, text="Step Back", command=self.stepBackTM)
-        self.buttonStepBack.grid(row=1, pady=5)
-        self.frameStep.grid(row=3, column=1)
+
+
 
         # Tape frame
         self.canvasSimOut = ctk.CTkCanvas(self.frameTape, bg="#c4c4c4", width=852, height=500)
@@ -144,7 +168,7 @@ class TMGUI:
         self.frameSim.grid_rowconfigure(0, weight=0)
         self.frameSim.grid_rowconfigure(1, weight=0)
         ### Seperate the two sides
-        ttk.Separator(master, orient='vertical').grid(column=1, row=0, rowspan=21, sticky='nsew', padx=5)
+        #ttk.Separator(master, orient='vertical').grid(column=1, row=0, rowspan=21, sticky='nsew', padx=5)
 
     # Editor Buttons
     def loadTM(self):
