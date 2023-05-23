@@ -4,10 +4,12 @@ try:  # python 3: default
     import tkinter as tk
     import customtkinter as ctk
     from tkinter import filedialog
+    import graphviz
 except ImportError:  # python 2
     import Tkinter as tk
     import customtkinter as ctk
     import tkFileDialog as filedialog
+    import graphviz
 
 import os, graphviz
 ctk.set_appearance_mode("dark")

@@ -37,33 +37,36 @@ class TMGUI:
         self.labelEditor = customtkinter.CTkLabel(self.frameEditor, text="Editor")
         self.labelEditor.grid(row=0, column=1)
         self.textEditor = ctk.CTkTextbox(self.frameEditor, height=590, width=40, wrap=ctk.WORD)
-        #self.textEditor = scrolledtext.ScrolledText(self.frameEditor, height=35, width=40, wrap=tk.WORD)
+        # self.textEditor = scrolledtext.ScrolledText(self.frameEditor, height=35, width=40, wrap=tk.WORD)
         self.textEditor.grid(row=1, column=0, columnspan=3, pady=7, padx=7, sticky='news')
 
         ###----------------------------Tkinter save button---------------------------------###
 
-        #self.buttonSave = tk.Button(self.frameEditor, width=10, relief='groove', text="Save", command=self.saveTM)
-        #self.buttonSave.grid(row=2, column=2, padx=20, pady=5)
+        # self.buttonSave = tk.Button(self.frameEditor, width=10, relief='groove', text="Save", command=self.saveTM)
+        # self.buttonSave.grid(row=2, column=2, padx=20, pady=5)
 
-        #----------------------------------------------------------------------------------###
+        # ----------------------------------------------------------------------------------###
 
-        self.buttonSave = ctk.CTkButton(self.frameEditor, width=10, text="             Save             ", command=self.saveTM)
+        self.buttonSave = ctk.CTkButton(self.frameEditor, width=10, text="             Save             ",
+                                        command=self.saveTM)
         self.buttonSave.grid(row=2, column=2, padx=20, pady=5)
 
         ###----------------------------Tkinter load button---------------------------------###
-        #self.buttonLoad = tk.Button(self.frameEditor, width=10, relief='groove', text="Load", command=self.loadTM)
-        #self.buttonLoad.grid(row=2, column=0, padx=20, pady=5)
+        # self.buttonLoad = tk.Button(self.frameEditor, width=10, relief='groove', text="Load", command=self.loadTM)
+        # self.buttonLoad.grid(row=2, column=0, padx=20, pady=5)
         # ----------------------------------------------------------------------------------###
 
-        self.buttonLoad = ctk.CTkButton(self.frameEditor, width=10, text="             Load             ", command=self.loadTM)
+        self.buttonLoad = ctk.CTkButton(self.frameEditor, width=10, text="             Load             ",
+                                        command=self.loadTM)
         self.buttonLoad.grid(row=2, column=0, padx=20, pady=5)
 
-        self.frameEditor.grid(row=3, column=3, padx=15, pady=10, sticky='news')
+        #self.frameEditor.grid(row=3, column=3, padx=15, pady=10, sticky='news')
+        self.frameEditor.place(x=900, y=10)
 
         default_resize(self.frameEditor)
 
         ### LEFT FRAME: Simulator
-        self.frameSim = customtkinter.CTkFrame(self.main)
+        self.frameSim = customtkinter.CTkFrame(self.main, width=830)
         self.labelSim = customtkinter.CTkLabel(self.frameSim, text="Turing machine Simulator")
         #self.labelSim.grid(row=0, column=0, columnspan=3, pady=7, padx=7)
         self.labelSim.place(x=300, y=18)
@@ -77,7 +80,7 @@ class TMGUI:
         #self.frameInput.grid(row=1, column=0, columnspan=3, pady=7, padx=7)
         self.frameInput.place(x=20,y=50)
 
-        combobox_var = customtkinter.StringVar(value="Choisir une algorithme")  # set initial value
+        combobox_var = customtkinter.StringVar(value="Choisir un algorithme")  # set initial value
 
         def combobox_callback(choice):
             print("combobox dropdown clicked:", choice)
@@ -86,7 +89,7 @@ class TMGUI:
                                              values=["Addition de deux nombre binaire                                           ",
                                                      "Addition de deux nombre binaire                                           ",
                                                      "Addition de deux nombre binaire                                           "],
-                                             command=combobox_callback, width=400,height=40,
+                                             command=combobox_callback, width=400, height=40,
                                              variable=combobox_var)
         #self.combobox.pack(padx=20, pady=10)
         self.combobox.place(x=424,y=63)
@@ -100,23 +103,27 @@ class TMGUI:
         #self.frameStep.grid(row=2, column=2, pady=7, padx=7)
         self.frameStep.place(x=640, y=110)
 
-        self.tabsSim = ttk.Notebook(self.frameSim, width=800, height=430)
+        #self.tabsSim = ttk.Notebook(self.frameSim, width=800, height=430)
         #self.tabsSim = ctk.CTkTabview(self.frameSim)
-        self.frameTape = customtkinter.CTkFrame(self.tabsSim)
-        self.frameText = customtkinter.CTkFrame(self.tabsSim)
-        self.tabsSim.add(self.frameTape, text='  Tape  ')
-        self.tabsSim.add(self.frameText, text='  Text  ')
-        self.tabsSim.grid(row=3, column=0, columnspan=3, pady=7, padx=7)
+        #self.frameTape = customtkinter.CTkFrame(self.tabsSim)
+        #self.frameText = customtkinter.CTkFrame(self.tabsSim)
+        #self.tabsSim.add(self.frameTape, text='  Tape  ')
+        #self.tabsSim.add(self.frameText, text='  Text  ')
+        #self.tabsSim.grid(row=3, column=0, columnspan=3, pady=7, padx=7)
 
         # Check boxes
         #####################################################################################################
         self.frameCheck = customtkinter.CTkFrame(self.frameSim)
         self.bidirectional = tk.BooleanVar()
-        self.bidirectional = ctk.BooleanVar()
+
+        def checkbox_event():
+            print("checkbox toggled, current value:", self.bidirectional.get())
+        #self.bidirectional = ctk.Variable
         #self.checkbox2Way = tk.Checkbutton(
             #self.frameCheck, text="Bidirectional", var=self.bidirectional, onvalue=True, offvalue=False)
 
-        self.checkbox2Way = ctk.CTkCheckBox(self.frameCheck, text="Bidirectional", onvalue=True, offvalue=False)
+        self.checkbox2Way = ctk.CTkCheckBox(self.frameCheck, command=checkbox_event,
+                                      text="Bidirectional", onvalue=True, offvalue=False)
         self.checkbox2Way.select()
         self.checkbox2Way.grid(row=0, sticky='w', pady=7, padx=7)
         self.two_tape = tk.BooleanVar()
@@ -154,12 +161,33 @@ class TMGUI:
 
 
         # Tape frame
-        self.canvasSimOut = ctk.CTkCanvas(self.frameTape, bg="#c4c4c4", width=852, height=500)
+
+        self.tapeframe = customtkinter.CTkFrame(self.frameSim, width=200)
+        self.tapeframe.place(x=10, y=220)
+        self.tabview = customtkinter.CTkTabview(self.tapeframe,width=828, height=420)
+        self.tabview.pack(padx=10, pady=10)
+
+        self.tabview.add("     Tape     ")  # add tab at the end
+        self.tabview.add("     Text     ")  # add tab at the end
+        self.tabview.set("     Tape     ")  # set currently visible tab
+
+        self.scrollable_frame = customtkinter.CTkScrollableFrame(self.tabview.tab("     Text     "), width=600, height=300)
+        self.scrollable_frame.place(x=10,y=30)
+
+
+
+
+
+        #tape li ldakhl     ####################################
+
+        self.canvasSimOut = ctk.CTkCanvas(self.tabview.tab("     Tape     "), bg="#2b2b2b", width=10, height=10)
         self.drawFirstTape()
+        #self.canvasSimOut.create_rectangle(10, 0, 10, 0, fill='red')
         self.canvasSimOut.pack(expand=1, fill='both')
+        #self.canvasSimOut.pack(expand=1, fill='both')
 
         # Text Frame
-        self.textSimOut = scrolledtext.ScrolledText(self.frameText, state='disabled', height=10, width=55, wrap=tk.WORD)
+        self.textSimOut = ctk.CTkTextbox(self.tabview.tab("     Text     "), state='disabled', height=10, width=55, wrap=tk.WORD )
         self.textSimOut.pack(expand=1, fill='both')
 
         self.frameSim.grid(row=0, column=0, rowspan=10, padx=15, pady=10, sticky="news")
@@ -310,7 +338,7 @@ class TMGUI:
             file = self.tm.file
             self.tm = None
             if self.two_tape.get():
-                self.tm = two_tape_TM(file, input=self.textTapeInput.get())
+                self.tm = two_tape_TM(file, input=self.textTapeInput.get(),fill='white')
             else:
                 self.tm = turing_machine(file, input=self.textTapeInput.get(), bidirectional=self.bidirectional.get())
             self.resetTM()
@@ -330,9 +358,9 @@ class TMGUI:
         starty = 150
         for i in range(17):
             if i < 8:
-                self.canvasSimOut.create_rectangle(50 * i + 2, starty, 50 * i + 52, starty + 50, fill="", tag="left")
+                self.canvasSimOut.create_rectangle(50 * i + 2, starty, 50 * i + 52, starty + 50, fill="#1f6aa5", tag="left", outline="white")
             elif i > 8:
-                self.canvasSimOut.create_rectangle(50 * i + 2, starty, 50 * i + 52, starty + 50, fill="")
+                self.canvasSimOut.create_rectangle(50 * i + 2, starty, 50 * i + 52, starty + 50, fill="#1f6aa5", outline="white")
         # draw highlighted square last to make sure sides are properly colored
         i = 8
         self.canvasSimOut.create_rectangle(50 * i + 2, starty, 50 * i + 52, starty + 50, fill="white", outline="red")
@@ -365,8 +393,8 @@ class TMGUI:
         else:
             state_text += str(state)
 
-        self.canvasSimOut.create_text(125, 100, text=state_text, font="Times 20", tag='text')
-        self.canvasSimOut.create_text(725, 100, text="Step: " + str(step), font="Times 20", tag='text')
+        self.canvasSimOut.create_text(125, 100, text=state_text, font="Times 20", tag='text', fill='white')
+        self.canvasSimOut.create_text(725, 100, text="Step: " + str(step), font="Times 20", tag='text',fill='white')
         starty = 150
         if not self.two_tape.get():
             self.canvasSimOut.delete('twotape')
