@@ -171,8 +171,9 @@ class TMGUI:
         self.tabview.add("     Text     ")  # add tab at the end
         self.tabview.set("     Tape     ")  # set currently visible tab
 
-        self.scrollable_frame = customtkinter.CTkScrollableFrame(self.tabview.tab("     Text     "), width=600, height=300)
-        self.scrollable_frame.place(x=10,y=30)
+        #self.scrollable_frame = customtkinter.CTkScrollableFrame(self.tabview.tab("     Text     "), width=600, height=300)
+        #self.scrollable_frame.place(x=10,y=30)
+
 
 
 
@@ -180,14 +181,18 @@ class TMGUI:
 
         #tape li ldakhl     ####################################
 
-        self.canvasSimOut = ctk.CTkCanvas(self.tabview.tab("     Tape     "), bg="#2b2b2b", width=10, height=10)
+        self.canvasSimOut = ctk.CTkCanvas(self.tabview.tab("     Tape     "), bg="#2b2b2b", width=10, height=10, highlightbackground="#2b2b2b")
         self.drawFirstTape()
         #self.canvasSimOut.create_rectangle(10, 0, 10, 0, fill='red')
         self.canvasSimOut.pack(expand=1, fill='both')
         #self.canvasSimOut.pack(expand=1, fill='both')
 
         # Text Frame
-        self.textSimOut = ctk.CTkTextbox(self.tabview.tab("     Text     "), state='disabled', height=10, width=55, wrap=tk.WORD )
+        #self.textSimOut = tk.scrolledtext(self.tabview.tab("     Text     "), height=10, width=55, wrap=tk.WORD )
+        #self.textSimOut.pack(expand=1, fill='both')
+
+        self.textSimOut = scrolledtext.ScrolledText(self.tabview.tab("     Text     "), state='disabled', height=10, width=55, wrap=tk.WORD)
+        self.textSimOut.configure(bg='#2b2b2b', fg='white',highlightbackground='red')
         self.textSimOut.pack(expand=1, fill='both')
 
         self.frameSim.grid(row=0, column=0, rowspan=10, padx=15, pady=10, sticky="news")
@@ -363,7 +368,7 @@ class TMGUI:
                 self.canvasSimOut.create_rectangle(50 * i + 2, starty, 50 * i + 52, starty + 50, fill="#1f6aa5", outline="white")
         # draw highlighted square last to make sure sides are properly colored
         i = 8
-        self.canvasSimOut.create_rectangle(50 * i + 2, starty, 50 * i + 52, starty + 50, fill="white", outline="red")
+        self.canvasSimOut.create_rectangle(50 * i + 2, starty, 50 * i + 52, starty + 50, fill="#333333", outline="white")
 
     def drawSecondTape(self):
         """Helper function to draw the second tape on the canvas"""
@@ -374,7 +379,7 @@ class TMGUI:
         # draw highlighted square last to make sure sides are properly colored
         i = 8
         self.canvasSimOut.create_rectangle(
-            50 * i + 2, starty, 50 * i + 52, starty + 50, fill="white", outline="red", tag="twotape")
+            50 * i + 2, starty, 50 * i + 52, starty + 50, fill="white", outline="white", tag="twotape")
 
     def drawOutMachine(self, config, step=None):
         """Draw out the given configuration of the machine on the canvas."""
@@ -405,16 +410,16 @@ class TMGUI:
                 for i in range(8):
                     if (position + i) >= 0:
                         self.canvasSimOut.create_rectangle(
-                            50 * i + 2, starty, 50 * i + 52, starty + 50, fill="", tag='left')
+                            50 * i + 2, starty, 50 * i + 52, starty + 50, fill="#1f6aa5", outline='white', tag='left')
                 # draw highlighted square last to make sure sides are properly colored
                 i = 8
                 self.canvasSimOut.create_rectangle(
-                    50 * i + 2, starty, 50 * i + 52, starty + 50, fill="white", outline="red")
+                    50 * i + 2, starty, 50 * i + 52, starty + 50, fill="#333333", outline="white")
             for j in range(17):
                 if (position + j) < 0 or (position + j) >= 20000:
                     continue
                 text = tape[position + j] if tape[position + j] != " " else ""
-                self.canvasSimOut.create_text(50 * j + 27, starty + 25, text=text, font="Times 20", tag='text')
+                self.canvasSimOut.create_text(50 * j + 27, starty + 25, text=text, font="Times 20", tag='text', fill="white")
         else:
             tape1 = config[0][0]
             tape2 = config[0][1]
@@ -423,10 +428,10 @@ class TMGUI:
             for j in range(17):
                 if (position1 + j) < 20000:
                     text1 = tape1[position1 + j] if tape1[position1 + j] != " " else ""
-                    self.canvasSimOut.create_text(50 * j + 27, starty + 25, text=text1, font="Times 20", tag='text')
+                    self.canvasSimOut.create_text(50 * j + 27, starty + 25, text=text1, font="Times 20", tag='text', fill="white")
                 if (position2 + j) < 20000:
                     text2 = tape2[position2 + j] if tape2[position2 + j] != " " else ""
-                    self.canvasSimOut.create_text(50 * j + 27, starty + 175, text=text2, font="Times 20", tag='text')
+                    self.canvasSimOut.create_text(50 * j + 27, starty + 175, text=text2, font="Times 20", tag='text', fill="white")
 
     def writeOutText(self, config, step=None):
         """Write out the given configuration of the machine in the text output."""
