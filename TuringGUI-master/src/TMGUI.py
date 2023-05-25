@@ -84,11 +84,12 @@ class TMGUI:
 
         def combobox_callback(choice):
             print("combobox dropdown clicked:", choice)
+            self.loadTMSelectList(choice)
 
         self.combobox = customtkinter.CTkComboBox(self.main,
-                                             values=["Addition de deux nombre binaire                                           ",
-                                                     "Addition de deux nombre binaire                                           ",
-                                                     "Addition de deux nombre binaire                                           "],
+                                             values=["Create reverse",
+                                                     "Create spaces"
+                                                     ],
                                              command=combobox_callback, width=400, height=40,
                                              variable=combobox_var)
         #self.combobox.pack(padx=20, pady=10)
@@ -115,15 +116,16 @@ class TMGUI:
         #####################################################################################################
         self.frameCheck = customtkinter.CTkFrame(self.frameSim)
         self.bidirectional = tk.BooleanVar()
+        self.bi = self.bidirectional.get();
 
         def checkbox_event():
-            print("checkbox toggled, current value:", self.bidirectional.get())
+            print("checkbox toggled, current value:", self.bi)
         #self.bidirectional = ctk.Variable
         #self.checkbox2Way = tk.Checkbutton(
-            #self.frameCheck, text="Bidirectional", var=self.bidirectional, onvalue=True, offvalue=False)
+            #self.frameCheck, text="Bidirectional", var=self.bidirectional, command=checkbox_event, onvalue=True, offvalue=False)
 
         self.checkbox2Way = ctk.CTkCheckBox(self.frameCheck, command=checkbox_event,
-                                      text="Bidirectional", onvalue=True, offvalue=False)
+                                     text="Bidirectional", onvalue=True, offvalue=False)
         self.checkbox2Way.select()
         self.checkbox2Way.grid(row=0, sticky='w', pady=7, padx=7)
         self.two_tape = tk.BooleanVar()
@@ -204,6 +206,31 @@ class TMGUI:
         #ttk.Separator(master, orient='vertical').grid(column=1, row=0, rowspan=21, sticky='nsew', padx=5)
 
     # Editor Buttons
+
+    def loadTMSelectList(self, choice):
+        """Load a TM from a specification file into the editor and simulator"""
+        if choice == 'Create reverse':
+            tmFileName = '../Docs/Examples/reverse_oneway.tm'
+            print('yoo')
+
+        if choice == 'Create spaces':
+            tmFileName = '../Docs/Examples/create_spaces.tm'
+
+
+
+        tmFile = open(tmFileName, "r")
+        self.textEditor.delete('1.0', 'end')
+        self.textEditor.insert(0.0, tmFile.read())
+        tmFile.close()
+        self.tm = None
+        if self.two_tape.get():
+            self.tm = two_tape_TM(tmFileName, input=self.textTapeInput.get())
+        else:
+            self.tm = turing_machine(tmFileName, input=self.textTapeInput.get(), bidirectional=self.bidirectional.get())
+        self.resetTM()
+
+
+
     def loadTM(self):
         """Load a TM from a specification file into the editor and simulator"""
         tmFileName = filedialog.askopenfilename(
