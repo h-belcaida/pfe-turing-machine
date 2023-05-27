@@ -4,10 +4,14 @@ try:  # python 3: default
     import tkinter as tk
     import customtkinter as ctk
     from tkinter import ttk, scrolledtext, filedialog
+    import graphviz
 except ImportError:  # python 2
     import Tkinter as tk
     import customtkinter as ctk
     import ttk, ScrolledText as scrolledtext, tkFileDialog as filedialog
+    import graphviz
+
+import os, graphviz
 
 from turing_machines import *
 import os
@@ -36,29 +40,19 @@ class TMGUI:
         self.frameEditor = customtkinter.CTkFrame(self.main)
         self.labelEditor = customtkinter.CTkLabel(self.frameEditor, text="Editor")
         self.labelEditor.grid(row=0, column=1)
-        self.textEditor = ctk.CTkTextbox(self.frameEditor, height=590, width=40, wrap=ctk.WORD)
-        # self.textEditor = scrolledtext.ScrolledText(self.frameEditor, height=35, width=40, wrap=tk.WORD)
+        self.textEditor = ctk.CTkTextbox(self.frameEditor, height=500, width=40, wrap=ctk.WORD)
         self.textEditor.grid(row=1, column=0, columnspan=3, pady=7, padx=7, sticky='news')
 
-        ###----------------------------Tkinter save button---------------------------------###
 
-        # self.buttonSave = tk.Button(self.frameEditor, width=10, relief='groove', text="Save", command=self.saveTM)
-        # self.buttonSave.grid(row=2, column=2, padx=20, pady=5)
-
-        # ----------------------------------------------------------------------------------###
 
         self.buttonSave = ctk.CTkButton(self.frameEditor, width=10, text="             Save             ",
                                         command=self.saveTM)
         self.buttonSave.grid(row=2, column=2, padx=20, pady=5)
-
-        ###----------------------------Tkinter load button---------------------------------###
-        # self.buttonLoad = tk.Button(self.frameEditor, width=10, relief='groove', text="Load", command=self.loadTM)
-        # self.buttonLoad.grid(row=2, column=0, padx=20, pady=5)
-        # ----------------------------------------------------------------------------------###
-
         self.buttonLoad = ctk.CTkButton(self.frameEditor, width=10, text="             Load             ",
                                         command=self.loadTM)
+
         self.buttonLoad.grid(row=2, column=0, padx=20, pady=5)
+
 
         #self.frameEditor.grid(row=3, column=3, padx=15, pady=10, sticky='news')
         self.frameEditor.place(x=900, y=10)
@@ -101,16 +95,13 @@ class TMGUI:
         self.buttonStep.grid(row=0, column=0, pady=7, padx=7)
         self.buttonStepBack = ctk.CTkButton(self.frameStep, width=10, text="Step Back", command=self.stepBackTM)
         self.buttonStepBack.grid(row=0, column=2, pady=5, padx=7)
+        self.buttonGraph = ctk.CTkButton(self.frameSim, width=50, text="\tGraph\t         ",
+                                        command=self.graphTM)
+        #self.buttonGraph.grid(row=3, column=0, padx=20, pady=5)
+        self.buttonGraph.place(x=650,y=160)
         #self.frameStep.grid(row=2, column=2, pady=7, padx=7)
         self.frameStep.place(x=640, y=110)
 
-        #self.tabsSim = ttk.Notebook(self.frameSim, width=800, height=430)
-        #self.tabsSim = ctk.CTkTabview(self.frameSim)
-        #self.frameTape = customtkinter.CTkFrame(self.tabsSim)
-        #self.frameText = customtkinter.CTkFrame(self.tabsSim)
-        #self.tabsSim.add(self.frameTape, text='  Tape  ')
-        #self.tabsSim.add(self.frameText, text='  Text  ')
-        #self.tabsSim.grid(row=3, column=0, columnspan=3, pady=7, padx=7)
 
         # Check boxes
         #####################################################################################################
@@ -136,7 +127,7 @@ class TMGUI:
         #self.checkbox2Tape.grid(row=1, sticky='w', pady=7, padx=7)
         #self.two_tape.trace("w", self.setTwoTape)
         #self.bidirectional.trace("w", self.setBidirectional)
-        #self.frameCheck.grid(row=3, column=2)
+        #self.frameCheck.grid(row=3, column=2)c
         self.frameCheck.place(x=408,y=110)
         #####################################################################################################
 
@@ -173,15 +164,7 @@ class TMGUI:
         self.tabview.add("     Text     ")  # add tab at the end
         self.tabview.set("     Tape     ")  # set currently visible tab
 
-        #self.scrollable_frame = customtkinter.CTkScrollableFrame(self.tabview.tab("     Text     "), width=600, height=300)
-        #self.scrollable_frame.place(x=10,y=30)
-
-
-
-
-
-
-        #tape li ldakhl     ####################################
+        #################################### Tape Frame     ####################################
 
         self.canvasSimOut = ctk.CTkCanvas(self.tabview.tab("     Tape     "), bg="#2b2b2b", width=10, height=10, highlightbackground="#2b2b2b")
         self.drawFirstTape()
@@ -190,9 +173,6 @@ class TMGUI:
         #self.canvasSimOut.pack(expand=1, fill='both')
 
         # Text Frame
-        #self.textSimOut = tk.scrolledtext(self.tabview.tab("     Text     "), height=10, width=55, wrap=tk.WORD )
-        #self.textSimOut.pack(expand=1, fill='both')
-
         self.textSimOut = scrolledtext.ScrolledText(self.tabview.tab("     Text     "), state='disabled', height=10, width=55, wrap=tk.WORD)
         self.textSimOut.configure(bg='#2b2b2b', fg='white',highlightbackground='red')
         self.textSimOut.pack(expand=1, fill='both')
@@ -202,8 +182,6 @@ class TMGUI:
         default_resize(self.frameSim)
         self.frameSim.grid_rowconfigure(0, weight=0)
         self.frameSim.grid_rowconfigure(1, weight=0)
-        ### Seperate the two sides
-        #ttk.Separator(master, orient='vertical').grid(column=1, row=0, rowspan=21, sticky='nsew', padx=5)
 
     # Editor Buttons
 
@@ -229,7 +207,72 @@ class TMGUI:
             self.tm = turing_machine(tmFileName, input=self.textTapeInput.get(), bidirectional=self.bidirectional.get())
         self.resetTM()
 
+    def graphTM(self):
+        """Get a TM specification file from the user, and graph it"""
+        tmFileName = filedialog.askopenfilename(
+            initialdir=CWD, title="Select TM File", filetypes=[("TM files", "*.tm"), ("all", "*.*")])
+        if tmFileName == '':
+            return
+        tmgraphdict = TMGUI.make_state_dict(tmFileName)
+        file = os.path.basename(tmFileName)[:-3]
+        TMGUI.generate_graph(tmgraphdict, file)
 
+    @staticmethod
+    def generate_graph(dict, file="turing_machine"):
+        """Take the dictionary from make_state_dict(), turn it into a Digraph object and render"""
+        d = dict
+        g = graphviz.Digraph(graph_attr={"dpi": "300"})
+        for key in d:
+            state = str(key[0])
+            newstate = str(key[1])
+            if newstate == '-1':
+                newstate = 'Accept'
+            if newstate == '-2':
+                newstate = 'Reject'
+            if newstate == '-3':
+                newstate = 'Halt'
+            val = d[key]
+            sym = str(val[0])
+            newsym = str(val[1])
+            direction = val[2]
+            comma = ', ' if newsym else ''
+            g.edge(state, newstate, label="< " + sym + " &#8594; " + newsym + comma + direction + ">")  #use HTML labels
+        g.render(file, directory='img', format="png", cleanup=True, view=True)
+
+    @staticmethod
+    def make_state_dict(filename):
+        """Turn a configuration file into a state-state dictionary. Used in generating images of the TM.
+        Returns:
+        a dictionary with key-value pairs (q,q'):(C,C',D,X) where q,q' are states, C, C' are the lists of input and output symbols, D is direction, and X is a flag for coloring
+        """
+        f = open(filename, 'r')
+        d = {}
+        for line in f:
+            seq = line.split()
+            if (len(seq) > 0) and (seq[0][0] != '#'):
+                state = int(seq[0])
+                sym = seq[1]
+                if sym == 'B':
+                    sym = "&#9633;"  # a square character
+                newstate = int(seq[2])
+                newsym = seq[3]
+                direction = seq[4]
+                if newsym == 'B':
+                    newsym = "&#9633;"
+                if newsym == sym:
+                    newsym = ''
+                k = (state, newstate)
+                if k in d:
+                    cur = tuple(d[k])
+                    if (cur[0] != sym):
+                        sym = cur[0] + ', ' + sym
+                    if not (cur[1] == newsym):
+                        newsym = cur[1] + ', ' + newsym
+                    if not (cur[2] == direction):
+                        direction = cur[2] + ', ' + direction
+                d[k] = (sym, newsym, direction)
+        f.close()
+        return d
 
     def loadTM(self):
         """Load a TM from a specification file into the editor and simulator"""
