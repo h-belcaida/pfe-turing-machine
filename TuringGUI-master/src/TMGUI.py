@@ -40,7 +40,7 @@ class TMGUI:
         self.frameEditor = customtkinter.CTkFrame(self.main)
         self.labelEditor = customtkinter.CTkLabel(self.frameEditor, text="Editor")
         self.labelEditor.grid(row=0, column=1)
-        self.textEditor = ctk.CTkTextbox(self.frameEditor, height=500, width=40, wrap=ctk.WORD)
+        self.textEditor = ctk.CTkTextbox(self.frameEditor, height=590, width=40, wrap=ctk.WORD)
         self.textEditor.grid(row=1, column=0, columnspan=3, pady=7, padx=7, sticky='news')
 
 
@@ -95,6 +95,9 @@ class TMGUI:
         self.buttonStep.grid(row=0, column=0, pady=7, padx=7)
         self.buttonStepBack = ctk.CTkButton(self.frameStep, width=10, text="Step Back", command=self.stepBackTM)
         self.buttonStepBack.grid(row=0, column=2, pady=5, padx=7)
+        self.labelSim = customtkinter.CTkLabel(self.frameSim, text="Générer le graphe")
+        # self.labelSim.grid(row=0, column=0, columnspan=3, pady=7, padx=7)
+        self.labelSim.place(x=415, y=160)
         self.buttonGraph = ctk.CTkButton(self.frameSim, width=50, text="\tGraph\t         ",
                                         command=self.graphTM)
         #self.buttonGraph.grid(row=3, column=0, padx=20, pady=5)
