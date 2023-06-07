@@ -138,7 +138,7 @@ class turing_machine:
         In one tape mode: a configuration tuple (T,s,e,p,q), where T is a list containing the tape, s,e, and p are indecies corresponding to start, end, and head position on the tape contents, and q is the state (an integer)
         In two tape mode: a tuple (T,s,e,p,q) with the same meanings, except T,s,e, and p are tuples with two values, for tape 1 and tape 2
         """
-        string = 'State: ' + str(config[4]) + '\n'
+        string = 'État: ' + str(config[4]) + '\n'
         tape = config[0]
         lowindex = min(config[1], config[3])
         highindex = max(config[2] + 1, config[3] + 1)
@@ -185,6 +185,48 @@ class turing_machine:
                 d[(state, sym)] = (newstate, newsym, direction)
         f.close()
         return d
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class two_tape_TM:

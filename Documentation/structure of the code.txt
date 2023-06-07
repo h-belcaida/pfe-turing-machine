@@ -1,0 +1,4 @@
+This code is defining a Turing Machine class that can simulate the behavior of Turing Machines by reading a transition table and an input string. The class has methods to set the input string and whether the tape should be one or two way, as well as methods to reset the configuration of the machine, move forward and backward in the machine's execution, and get the current configuration of the machine. The machine simulates the behavior of a Turing Machine by using a transition table to determine what symbol to write to the tape, which direction to move the tape head, and what the next state of the machine should be based on the current state and symbol.
+
+
+This turing_machine class contains 9 methods (functions) and 5 attributes (variables): file, two_way, next_state_dict, inputstring, and step.
